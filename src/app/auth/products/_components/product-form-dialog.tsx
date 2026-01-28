@@ -126,11 +126,16 @@ export function ProductFormDialog({
 
   const onSubmit = (data: ProductFormValues) => {
     try {
+      const slug = data.slug || data.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
       if (mode === "add") {
-        addProduct(data);
+        addProduct({
+          ...data,
+          slug,
+          dateAdded: new Date().toISOString().split('T')[0],
+        });
         toast.success("Product added successfully");
       } else if (product) {
-        updateProduct(product.id, data);
+        updateProduct(product.id, { ...data, slug });
         toast.success("Product updated successfully");
       }
       onOpenChange(false);
