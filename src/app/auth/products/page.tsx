@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Plus, FileDown } from "lucide-react";
 import { toast } from "sonner";
@@ -13,7 +13,7 @@ import { ProductsTable } from "./_components/products-table";
 import { ProductFormDialog } from "./_components/product-form-dialog";
 import { InventoryDialog } from "./_components/inventory-dialog";
 
-export default function ProductsPage() {
+function ProductsPageContent() {
   const searchParams = useSearchParams();
   const { products, deleteProduct, duplicateProduct } = useProductStore();
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
@@ -213,5 +213,13 @@ export default function ProductsPage() {
         product={inventoryProduct}
       />
     </div>
+  );
+}
+
+export default function ProductsPage() {
+  return (
+    <Suspense fallback={<div className="flex flex-1 items-center justify-center p-6">Loading...</div>}>
+      <ProductsPageContent />
+    </Suspense>
   );
 }
